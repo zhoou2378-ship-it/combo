@@ -1,6 +1,6 @@
 {
   "navigationBarTitleText": "情绪解压",
   "usingComponents": {
-    "emotion-card": "/components/emotion-card/emotion-card"
+    "emotion-card": "../../components/emotion-card/emotion-card"
   }
 }

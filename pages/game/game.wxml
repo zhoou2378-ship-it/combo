@@ -7,6 +7,9 @@
     <view class="relief-badge">释放 {{reliefValue}}</view>
   </view>
 
+  <!-- 粒子画布层（hit 模式爆炸特效） -->
+  <canvas canvas-id="particleCanvas" class="particle-canvas" type="2d"></canvas>
+
   <!-- 游戏区域 -->
   <view class="game-area" bindtap="handleTap">
 

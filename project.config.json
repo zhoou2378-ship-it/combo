@@ -1,7 +1,8 @@
 {
   "description": "情绪解压 - 碎屏Combo V3",
   "packOptions": {
-    "ignore": []
+    "ignore": [],
+    "include": []
   },
   "setting": {
     "urlCheck": false,
@@ -40,11 +41,18 @@
     "minifyWXML": true,
     "showES6CompileOption": false,
     "useCompilerPlugins": false,
-    "hasCompressOptions": false
+    "hasCompressOptions": false,
+    "compileWorklet": false,
+    "localPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true
   },
   "compileType": "miniprogram",
   "libVersion": "3.3.5",
   "appid": "wx3c0f5660bde1a2a3",
   "projectname": "combo-v3",
-  "condition": {}
+  "condition": {},
+  "simulatorPluginLibVersion": {},
+  "editorSetting": {}
 }

@@ -17,8 +17,10 @@
 - 粒子系统：Canvas绘制，点击位置生成带重力的彩色粒子
 - 多物体系统：手机/键盘/玻璃/马克杯随机切换
 
-### 文件变更
-24 files changed, 1677 insertions
+### 本次提交
+- feat/combo-v3: 24 files, 1677+ insertions
+- BugFix: removePiece _session 未定义 (commit 65732b0)
 
-### 待审查
-请确认：代码正确性 / 安全性 / 可读性 / 性能
+### 审查结果
+- CR 报告：✅ 可合并（4项全通过，1个Bug已修复）
+- 验收报告：✅ 13/13 用例全部通过
