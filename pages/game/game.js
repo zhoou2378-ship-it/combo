@@ -303,6 +303,7 @@ Page({
 
   removePiece(e) {
     const id = e.currentTarget.dataset.id;
+    const { _session } = this.data;
     const pieces = this.data.puzzlePieces.map(p => p.id === id ? { ...p, removed: true } : p);
     const removedCount = pieces.filter(p => p.removed).length;
     const newRelief = this.data.reliefValue + 8;
