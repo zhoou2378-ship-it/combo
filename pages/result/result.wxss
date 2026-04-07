@@ -76,9 +76,15 @@
 /* 主按钮横排 */
 .actions {
   display: flex;
-  gap: 20rpx;
+  flex-direction: row;
   width: 100%;
-  margin-bottom: 20rpx;
+  margin-bottom: 24rpx;
+}
+.actions button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* 再来一次 */
@@ -107,6 +113,7 @@
   padding: 28rpx 0;
   border: none;
   line-height: 1;
+  margin-right: 16rpx;
 }
 
 /* 底部幽灵按钮 */

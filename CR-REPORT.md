@@ -1,4 +1,4 @@
-# 🔍 CR 报告 — 碎屏Combo V3
+# 🔍 CR 报告 — 戳戳乐 V3
 > **PR**: [#2 feat/combo-v3 → main](https://github.com/zhoou2378-ship-it/combo/pull/2)  
 > **分支**: `feat/combo-v3` | **提交**: `65732b0`  
 > **审查时间**: 2026-04-07 18:10 GMT+8  
