@@ -1,6 +1,53 @@
 const { emotions } = require("../../utils/emotion");
 const tracker = require("../../utils/tracker");
 
+// ── 粒子系统 ──
+const COLORS = ["#ff4757","#ff6b81","#ffa502","#ffd32a","#7bed9f","#70a1ff","#5352ed","#ff6348","#eccc68","#a29bfe","#fd79a8"];
+
+class Particle {
+  constructor(x, y, { gravity = 0.15, friction = 0.99, fadeRate = 0.015 } = {}) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 3 + Math.random() * 7;
+    this.x = x;
+    this.y = y;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed - 3;
+    this.gravity = gravity;
+    this.friction = friction;
+    this.fadeRate = fadeRate;
+    this.life = 1;
+    this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    this.size = 3 + Math.random() * 7;
+    this.rotation = Math.random() * Math.PI * 2;
+    this.rotationSpeed = (Math.random() - 0.5) * 0.25;
+    this.isCircle = Math.random() > 0.5;
+  }
+  update() {
+    this.vx *= this.friction;
+    this.vy *= this.friction;
+    this.vy += this.gravity;
+    this.x += this.vx;
+    this.y += this.vy;
+    this.rotation += this.rotationSpeed;
+    this.life -= this.fadeRate;
+  }
+  draw(ctx) {
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, this.life);
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation);
+    ctx.fillStyle = this.color;
+    if (this.isCircle) {
+      ctx.beginPath();
+      ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+    }
+    ctx.restore();
+  }
+}
+
 // 随机物体配置（复用 V2）
 const OBJECTS = [
   { type: "phone",    name: "手机",   maxDur: 120 },
@@ -65,7 +112,13 @@ Page({
     companionWord: "",
     companionTapCount: 0,
     companionInterval: null,
-    companionTimerInterval: null
+    companionTimerInterval: null,
+
+    // ── 粒子系统 ──
+    _canvas: null,
+    _ctx: null,
+    _particles: [],
+    _animFrame: null
   },
 
   onLoad(options) {
@@ -86,6 +139,22 @@ Page({
       _session: session,
       _startTime: Date.now()
     });
+
+    // ── 初始化粒子画布（仅 hit 模式） ──
+    if (emotion.game === "hit") {
+      const query = wx.createSelectorQuery().in(this);
+      query.select("#particleCanvas").fields({ node: true, size: true }).exec((res) => {
+        if (!res[0]) return;
+        const canvas = res[0].node;
+        const ctx = canvas.getContext("2d");
+        const dpr = wx.getSystemInfoSync().pixelRatio;
+        canvas.width  = res[0].width  * dpr;
+        canvas.height = res[0].height * dpr;
+        ctx.scale(dpr, dpr);
+        this.setData({ _canvas: canvas, _ctx: ctx });
+        this._renderLoop();
+      });
+    }
 
     // ── 初始化游戏特定逻辑 ──
     if (emotion.game === "breath") {
@@ -109,6 +178,30 @@ Page({
     clearTimeout(this.data.breathTimeout);
     clearInterval(this.data.companionInterval);
     clearInterval(this.data.companionTimerInterval);
+    if (this.data._animFrame) cancelAnimationFrame(this.data._animFrame);
+  },
+
+  // ── 粒子渲染循环 ──
+  _renderLoop() {
+    const { _ctx, _canvas, _particles } = this.data;
+    if (!_ctx || !_canvas) return;
+
+    const dpr = wx.getSystemInfoSync().pixelRatio;
+    _ctx.clearRect(0, 0, _canvas.width / dpr, _canvas.height / dpr);
+
+    this.data._particles = _particles.filter(p => p.life > 0);
+    this.data._particles.forEach(p => {
+      p.update();
+      p.draw(_ctx);
+    });
+
+    this.data._animFrame = requestAnimationFrame(() => this._renderLoop());
+  },
+
+  // ── 生成粒子（hit 点击时调用） ──
+  _spawnParticles(x, y, count = 20) {
+    const newOnes = Array.from({ length: count }, () => new Particle(x, y));
+    this.setData({ _particles: [...this.data._particles, ...newOnes] });
   },
 
   // ── 通用 ──
@@ -193,7 +286,11 @@ Page({
   },
 
   // ── hit: 砸击 ──
-  onHit() {
+  onHit(e) {
+    // 记录触摸坐标，用于粒子特效
+    const x = e ? (e.detail.x || e.touches?.[0]?.x || 150) : 150;
+    const y = e ? (e.detail.y || e.touches?.[0]?.y || 300) : 300;
+
     const now = Date.now();
     let { combo, maxCombo, durability, reliefValue, lastHitTime, _session } = this.data;
     const { maxDurability } = this.data;
@@ -206,6 +303,9 @@ Page({
     // 首次有效点击后显示 combo 区
     if (!this.data.showCombo) this.setData({ showCombo: true });
     maxCombo = Math.max(maxCombo, combo);
+
+    // ── 粒子爆炸特效 ──
+    this._spawnParticles(x, y, 14 + Math.floor(Math.random() * 16));
 
     // ── 埋点：每次点击上报 combo ──
     tracker.track(_session, "max_combo", { value: maxCombo });
@@ -303,6 +403,7 @@ Page({
 
   removePiece(e) {
     const id = e.currentTarget.dataset.id;
+    const { _session } = this.data;
     const pieces = this.data.puzzlePieces.map(p => p.id === id ? { ...p, removed: true } : p);
     const removedCount = pieces.filter(p => p.removed).length;
     const newRelief = this.data.reliefValue + 8;
