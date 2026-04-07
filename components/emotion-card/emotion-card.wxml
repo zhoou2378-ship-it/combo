@@ -1,0 +1,5 @@
+<view class="card" style="background: {{item.color}}">
+  <text class="card-icon">{{item.icon}}</text>
+  <text class="card-name">{{item.name}}</text>
+  <text class="card-desc">{{item.desc}}</text>
+</view>

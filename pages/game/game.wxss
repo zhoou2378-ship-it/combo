@@ -1,0 +1,391 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── 顶部状态栏 ── */
+.top-bar {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60rpx 32rpx 0;
+}
+
+.back-btn {
+  width: 72rpx;
+  height: 72rpx;
+  background: rgba(0,0,0,0.25);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  color: rgba(255,255,255,0.8);
+  font-weight: 300;
+}
+
+.timer {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Courier New', monospace;
+  font-size: 48rpx;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 2rpx 20rpx rgba(0,0,0,0.3);
+}
+
+.relief-badge {
+  font-family: 'Courier New', monospace;
+  font-size: 24rpx;
+  color: rgba(255,255,255,0.7);
+  background: rgba(0,0,0,0.25);
+  padding: 12rpx 24rpx;
+  border-radius: 100rpx;
+  letter-spacing: 2rpx;
+}
+
+/* ── 游戏区域 ── */
+.game-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  position: relative;
+}
+
+/* ── hit: 砸击 ── */
+.hit-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.hit-target {
+  width: 320rpx;
+  height: 420rpx;
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  border-radius: 48rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+  box-shadow: 0 20rpx 60rpx rgba(0,0,0,0.5);
+  transition: transform 0.05s;
+}
+
+.hit-target:active {
+  transform: scale(0.95);
+}
+
+.hit-target.shake {
+  animation: shake 0.15s ease;
+}
+
+.hit-icon { font-size: 100rpx; }
+.hit-name { font-size: 28rpx; color: rgba(255,255,255,0.5); }
+
+.dur-track {
+  width: 200rpx;
+  height: 8rpx;
+  background: rgba(255,255,255,0.1);
+  border-radius: 100rpx;
+  overflow: hidden;
+  margin-top: 8rpx;
+}
+
+.dur-fill {
+  height: 100%;
+  background: #4ade80;
+  border-radius: 100rpx;
+  transition: width 0.2s ease;
+}
+
+.dur-fill.warn { background: #fbbf24; }
+.dur-fill.danger { background: #f87171; }
+
+.combo-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  animation: comboIn 0.3s ease;
+}
+
+@keyframes comboIn {
+  from { opacity: 0; transform: scale(0.7); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.combo-label {
+  font-family: 'Courier New', monospace;
+  font-size: 22rpx;
+  letter-spacing: 8rpx;
+  color: rgba(255,255,255,0.35);
+}
+
+.combo-num {
+  font-family: 'Courier New', monospace;
+  font-size: 96rpx;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  transition: transform 0.05s;
+}
+
+.combo-num.shake {
+  animation: shake 0.15s ease;
+}
+
+.combo-multi {
+  font-family: 'Courier New', monospace;
+  font-size: 26rpx;
+  color: rgba(255,80,80,0.5);
+  font-weight: 600;
+  letter-spacing: 2rpx;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px) rotate(-1deg); }
+  75% { transform: translateX(8px) rotate(1deg); }
+}
+
+/* ── explode: 爆炸 ── */
+.explode-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48rpx;
+}
+
+.explode-ball {
+  width: 360rpx;
+  height: 360rpx;
+  background: linear-gradient(145deg, #ff2e2e, #8b0000);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 120rpx;
+  box-shadow: 0 0 80rpx rgba(255,46,46,0.6);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.explode-ball--active {
+  animation: explodeScale 0.8s ease-out forwards;
+}
+
+@keyframes explodeScale {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.3); }
+  60%  { transform: scale(2); opacity: 0.8; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+.tap-hint {
+  font-size: 28rpx;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 4rpx;
+}
+
+/* ── breath: 呼吸 ── */
+.breath-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48rpx;
+}
+
+.breath-circle {
+  width: 400rpx;
+  height: 400rpx;
+  background: radial-gradient(circle, rgba(90,174,255,0.8), rgba(90,174,255,0.2));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 3.5s ease-in-out, opacity 3.5s ease-in-out;
+  box-shadow: 0 0 60rpx rgba(90,174,255,0.4);
+}
+
+.breath-text {
+  font-size: 36rpx;
+  color: #fff;
+  font-weight: 500;
+  letter-spacing: 4rpx;
+}
+
+.breath-guide {
+  font-size: 24rpx;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 3rpx;
+}
+
+/* ── tap: 敲击 ── */
+.tap-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.tap-target {
+  width: 280rpx;
+  height: 280rpx;
+  background: linear-gradient(145deg, #7B6EFF, #4c3fcf);
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 100rpx;
+  box-shadow: 0 12rpx 40rpx rgba(123,110,255,0.5);
+  transition: transform 0.08s;
+}
+
+.tap-target:active {
+  transform: scale(0.9);
+}
+
+.tap-target.pulse {
+  animation: pulse 0.2s ease;
+}
+
+@keyframes pulse {
+  0%   { transform: scale(0.9); }
+  50%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.tap-icon { font-size: 100rpx; }
+
+.tap-count {
+  font-family: 'Courier New', monospace;
+  font-size: 80rpx;
+  font-weight: 900;
+  color: rgba(123,110,255,0.9);
+}
+
+.tap-hint {
+  font-size: 24rpx;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 3rpx;
+}
+
+/* ── puzzle: 拼图 ── */
+.puzzle-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+  width: 100%;
+  height: 60vh;
+  position: relative;
+}
+
+.puzzle-area {
+  width: 100%;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.puzzle-piece {
+  position: absolute;
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 16rpx;
+  opacity: 0.8;
+  transition: opacity 0.3s, transform 0.3s;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.3);
+}
+
+.puzzle-piece.removed {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.puzzle-count {
+  font-family: 'Courier New', monospace;
+  font-size: 28rpx;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 4rpx;
+}
+
+/* ── companion: 陪伴 ── */
+.companion-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32rpx;
+  position: relative;
+}
+
+.companion-moon {
+  width: 280rpx;
+  height: 280rpx;
+  background: radial-gradient(circle at 35% 35%, #fff9c4, #f9a825);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 100rpx;
+  box-shadow: 0 0 80rpx rgba(249,168,37,0.5);
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-20rpx); }
+}
+
+.companion-face {
+  font-size: 100rpx;
+}
+
+.companion-word {
+  font-size: 32rpx;
+  color: rgba(255,255,255,0.8);
+  text-align: center;
+  letter-spacing: 2rpx;
+  min-height: 48rpx;
+  animation: fadeIn 0.5s ease;
+}
+
+.companion-hint {
+  font-size: 24rpx;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 3rpx;
+}
+
+.companion-tap-area {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10rpx); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── 进度条 ── */
+.progress-bar {
+  height: 6rpx;
+  background: rgba(255,255,255,0.1);
+  width: 100%;
+}
+
+.progress-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+  border-radius: 0 3rpx 3rpx 0;
+}

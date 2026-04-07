@@ -1,0 +1,29 @@
+<view class="container">
+  <view class="emotion-badge" style="background: {{emotion.color}}">
+    {{emotion.icon}}
+  </view>
+
+  <view class="percent">{{relief}}%</view>
+  <view class="label">的{{emotion.name}}已被释放</view>
+
+  <view class="stats">
+    <view class="stat-item">
+      <text class="stat-val">{{maxCombo}}</text>
+      <text class="stat-key">最高Combo</text>
+    </view>
+    <view class="stat-sep"></view>
+    <view class="stat-item">
+      <text class="stat-val">{{emotion.name}}</text>
+      <text class="stat-key">情绪类型</text>
+    </view>
+  </view>
+
+  <!-- 主按钮横排 -->
+  <view class="actions">
+    <button class="btn-share" open-type="share">分享成绩</button>
+    <button class="btn-primary" bindtap="restart">再来一次</button>
+  </view>
+
+  <!-- 底部次要按钮 -->
+  <button class="btn-ghost" bindtap="goHome">选择其他情绪</button>
+</view>

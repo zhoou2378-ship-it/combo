@@ -1,0 +1,86 @@
+<view class="page" style="background: {{emotion.color}}">
+
+  <!-- 顶部状态栏 -->
+  <view class="top-bar">
+    <view class="back-btn" bindtap="goBack">✕</view>
+    <view class="timer">{{timeLeft}}s</view>
+    <view class="relief-badge">释放 {{reliefValue}}</view>
+  </view>
+
+  <!-- 游戏区域 -->
+  <view class="game-area" bindtap="handleTap">
+
+    <!-- hit: 砸击 -->
+    <view wx:if="{{emotion.game === 'hit'}}" class="hit-wrapper">
+      <view class="hit-target {{hitShake ? 'shake' : ''}}" bindtap="onHit">
+        <text class="hit-icon">📱</text>
+        <text class="hit-name">手机</text>
+        <view class="dur-track">
+          <view class="dur-fill {{durClass}}" style="width: {{durPercent}}%"></view>
+        </view>
+      </view>
+      <view class="combo-zone" wx:if="{{showCombo}}">
+        <view class="combo-label">COMBO</view>
+        <view class="combo-num {{comboShake ? 'shake' : ''}}">{{combo}}</view>
+        <view class="combo-multi" wx:if="{{combo > 1}}">×{{comboMultiplier}}%</view>
+      </view>
+    </view>
+
+    <!-- explode: 爆炸 -->
+    <view wx:if="{{emotion.game === 'explode'}}" class="explode-wrapper">
+      <view class="explode-ball {{explodeActive ? 'explode-ball--active' : ''}}" bindtap="onExplode">
+        <text class="explode-icon">💣</text>
+      </view>
+      <view class="tap-hint">点击引爆</view>
+    </view>
+
+    <!-- breath: 呼吸 -->
+    <view wx:if="{{emotion.game === 'breath'}}" class="breath-wrapper">
+      <view class="breath-circle" style="transform: scale({{scale}}); opacity: {{breathOpacity}}">
+        <text class="breath-text">{{breathText}}</text>
+      </view>
+      <view class="breath-guide">跟随圆圈一起呼吸</view>
+    </view>
+
+    <!-- tap: 敲击 -->
+    <view wx:if="{{emotion.game === 'tap'}}" class="tap-wrapper">
+      <view class="tap-target {{tapPulse ? 'pulse' : ''}}" bindtap="onTap">
+        <text class="tap-icon">🧱</text>
+      </view>
+      <view class="tap-count">{{tapCount}}</view>
+      <view class="tap-hint">有节奏地敲击</view>
+    </view>
+
+    <!-- puzzle: 拼图（点击消除碎片） -->
+    <view wx:if="{{emotion.game === 'puzzle'}}" class="puzzle-wrapper">
+      <view class="puzzle-area">
+        <block wx:for="{{puzzlePieces}}" wx:key="id">
+          <view
+            class="puzzle-piece {{item.removed ? 'removed' : ''}}"
+            style="left: {{item.x}}%; top: {{item.y}}%; background: {{item.color}}"
+            data-id="{{item.id}}"
+            bindtap="removePiece"
+          ></view>
+        </block>
+      </view>
+      <view class="puzzle-count">{{removedCount}} / {{totalPieces}}</view>
+    </view>
+
+    <!-- companion: 陪伴 -->
+    <view wx:if="{{emotion.game === 'companion'}}" class="companion-wrapper">
+      <view class="companion-moon">
+        <text class="companion-face">{{companionText}}</text>
+      </view>
+      <view class="companion-word" wx:if="{{companionWord}}">{{companionWord}}</view>
+      <view class="companion-hint">触摸月亮，它会回应你</view>
+      <view class="companion-tap-area" bindtap="onCompanionTap"></view>
+    </view>
+
+  </view>
+
+  <!-- 进度条（发泄/舒缓类有，治愈类可选） -->
+  <view class="progress-bar" wx:if="{{showProgress}}">
+    <view class="progress-fill" style="width: {{progress}}%; background: {{emotion.color}}"></view>
+  </view>
+
+</view>

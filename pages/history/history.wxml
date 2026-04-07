@@ -1,0 +1,51 @@
+<view class="container">
+  <!-- 指标汇总 -->
+  <view class="metrics" wx:if="{{metrics}}">
+    <view class="metric-item">
+      <text class="metric-val">{{metrics.total_games}}</text>
+      <text class="metric-key">总次数</text>
+    </view>
+    <view class="metric-sep"></view>
+    <view class="metric-item">
+      <text class="metric-val">{{metrics.replay_rate}}</text>
+      <text class="metric-key">回玩率</text>
+    </view>
+    <view class="metric-sep"></view>
+    <view class="metric-item">
+      <text class="metric-val">{{metrics.share_rate}}</text>
+      <text class="metric-key">分享率</text>
+    </view>
+    <view class="metric-sep"></view>
+    <view class="metric-item">
+      <text class="metric-val">{{metrics.avg_duration}}</text>
+      <text class="metric-key">平均时长</text>
+    </view>
+  </view>
+
+  <view class="list" wx:if="{{records.length > 0}}">
+    <view class="record" wx:for="{{records}}" wx:key="index">
+      <view class="record-left">
+        <view class="emotion-dot" style="background: {{item.color}}"></view>
+        <view class="record-info">
+          <text class="record-emotion">{{item.name}}</text>
+          <text class="record-meta">
+            <text wx:if="{{item.replay}}">🔄</text>
+            <text wx:if="{{item.share}}">📤</text>
+            {{item.duration}}s
+          </text>
+        </view>
+      </view>
+      <view class="record-right">
+        <text class="record-percent">{{item.percent}}%</text>
+        <text class="record-combo">Combo {{item.maxCombo}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:else>
+    <text class="empty-icon">📝</text>
+    <text class="empty-text">还没有记录</text>
+    <text class="empty-sub">开始你的第一次解压吧</text>
+    <button class="btn-start" bindtap="goHome">去解压</button>
+  </view>
+</view>

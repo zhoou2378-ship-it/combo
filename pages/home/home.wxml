@@ -1,0 +1,19 @@
+<view class="container">
+  <view class="header">
+    <text class="title">你现在是什么感觉？</text>
+    <text class="subtitle">选一个，开始你的解压体验</text>
+  </view>
+
+  <view class="list">
+    <block wx:for="{{emotions}}" wx:key="id">
+      <emotion-card
+        data-emotion="{{item}}"
+        bindtap="selectEmotion"
+      />
+    </block>
+  </view>
+
+  <view class="history-link" bindtap="goHistory">
+    <text>📊 查看历史记录</text>
+  </view>
+</view>
